@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>영어 스피킹 연습</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎤 영어 스피킹 연습</h1>
+            <p>상황을 입력하고 영어로 말해보세요!</p>
+        </header>
+
+        <main>
+            <!-- 상황 입력 섹션 -->
+            <section class="input-section">
+                <div class="form-group">
+                    <label for="situation">어떤 상황인가요?</label>
+                    <input 
+                        type="text" 
+                        id="situation" 
+                        placeholder="예: 카페에서 커피 주문하기"
+                        autocomplete="off"
+                    >
+                    <button id="generateBtn" class="btn btn-primary">
+                        문장 생성하기
+                    </button>
+                </div>
+            </section>
+
+            <!-- 생성된 문장 섹션 -->
+            <section class="sentence-section" id="sentenceSection" style="display: none;">
+                <div class="sentence-card">
+                    <h2>연습할 문장</h2>
+                    <div class="sentence-display" id="sentenceDisplay"></div>
+                    <div class="situation-display" id="situationDisplay"></div>
+                    
+                    <div class="record-controls">
+                        <button id="recordBtn" class="btn btn-record">
+                            <span class="mic-icon">🎙️</span>
+                            <span id="recordText">녹음 시작</span>
+                        </button>
+                        <div id="recordingStatus" class="recording-status"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 피드백 섹션 -->
+            <section class="feedback-section" id="feedbackSection" style="display: none;">
+                <div class="feedback-card">
+                    <h2>발음 피드백</h2>
+                    
+                    <div class="score-display">
+                        <div class="score-circle">
+                            <span id="scoreValue">0</span>
+                            <span class="score-label">점</span>
+                        </div>
+                    </div>
+
+                    <div class="feedback-details">
+                        <div class="detail-item">
+                            <strong>인식된 문장:</strong>
+                            <p id="transcriptText"></p>
+                        </div>
+                        
+                        <div class="detail-item">
+                            <strong>피드백:</strong>
+                            <div id="feedbackText" class="feedback-text"></div>
+                        </div>
+                    </div>
+
+                    <button id="tryAgainBtn" class="btn btn-secondary">
+                        다시 연습하기
+                    </button>
+                </div>
+            </section>
+
+            <!-- 로딩 스피너 -->
+            <div id="loading" class="loading" style="display: none;">
+                <div class="spinner"></div>
+                <p id="loadingText">처리 중...</p>
+            </div>
+        </main>
+
+        <footer>
+            <p>Powered by Google Cloud Platform & Vertex AI</p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
