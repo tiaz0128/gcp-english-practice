@@ -4,7 +4,7 @@ Google Cloud Platform의 Cloud Run, Vertex AI, Speech-to-Text를 활용한 영�
 
 ## 프로젝트 개요
 
-- FOSS for all 컨퍼런스 자원봉사 다녀옴
+- [FOSS for all](https://fossforall.org/) 컨퍼런스 자원봉사 다녀옴
 - 외국인 참가자가 많았는데
 - 영어로 말을 못하겠음..
 - 영어 공부가 필요...
