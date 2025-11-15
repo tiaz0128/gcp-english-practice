@@ -19,7 +19,7 @@ fi
 export PROJECT_ID
 
 # 리전 설정
-REGION="us-central1"
+REGION="asia-northeast3"
 
 echo -e "\n${GREEN}1. GCP 프로젝트 설정${NC}"
 gcloud config set project ${PROJECT_ID}
@@ -29,7 +29,8 @@ gcloud services enable \
     run.googleapis.com \
     cloudbuild.googleapis.com \
     aiplatform.googleapis.com \
-    speech.googleapis.com
+    speech.googleapis.com \
+    texttospeech.googleapis.com
 
 echo -e "\n${GREEN}3. Backend 이미지 빌드 및 배포${NC}"
 cd backend

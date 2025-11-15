@@ -125,6 +125,21 @@ input[type="text"]:focus {
     animation: pulse 1.5s ease-in-out infinite;
 }
 
+.btn-listen {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-size: 1.1rem;
+}
+
+.btn-listen:disabled {
+    opacity: 0.7;
+    cursor: wait;
+}
+
 @keyframes pulse {
     0%, 100% {
         transform: scale(1);
@@ -167,7 +182,13 @@ input[type="text"]:focus {
     font-size: 0.9rem;
     color: #888;
     text-align: center;
-    margin-bottom: 30px;
+    margin-bottom: 20px;
+}
+
+.listen-controls {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
 }
 
 .record-controls {
@@ -285,8 +306,9 @@ footer {
     opacity: 0.8;
 }
 
-/* 마이크 아이콘 */
-.mic-icon {
+/* 아이콘 */
+.mic-icon,
+.speaker-icon {
     font-size: 1.5rem;
 }
 

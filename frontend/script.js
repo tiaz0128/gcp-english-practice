@@ -25,6 +25,10 @@ const feedbackText = document.getElementById('feedbackText');
 const tryAgainBtn = document.getElementById('tryAgainBtn');
 const loading = document.getElementById('loading');
 const loadingText = document.getElementById('loadingText');
+const listenBtn = document.getElementById('listenBtn');
+
+// 오디오 재생용
+let currentAudio = null;
 
 // 이벤트 리스너
 generateBtn.addEventListener('click', generateSentence);
@@ -35,6 +39,7 @@ situationInput.addEventListener('keypress', (e) => {
 });
 recordBtn.addEventListener('click', toggleRecording);
 tryAgainBtn.addEventListener('click', resetApp);
+listenBtn.addEventListener('click', playPronunciation);
 
 // 문장 생성
 async function generateSentence() {
@@ -225,6 +230,70 @@ function showLoading(message) {
 // 로딩 숨김
 function hideLoading() {
     loading.style.display = 'none';
+}
+
+// 발음 듣기 (Text-to-Speech)
+async function playPronunciation() {
+    if (!currentSentence) {
+        alert('먼저 문장을 생성해주세요!');
+        return;
+    }
+
+    try {
+        // 이전 오디오 정지
+        if (currentAudio) {
+            currentAudio.pause();
+            currentAudio = null;
+        }
+
+        // 버튼 상태 변경
+        listenBtn.disabled = true;
+        listenBtn.innerHTML = '<span class="speaker-icon">⏳</span><span>로딩 중...</span>';
+
+        // Text-to-Speech API 호출
+        const response = await fetch(`${API_BASE_URL}/api/text-to-speech`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ text: currentSentence })
+        });
+
+        if (!response.ok) {
+            throw new Error('음성 생성에 실패했습니다');
+        }
+
+        // 오디오 블롭 생성
+        const audioBlob = await response.blob();
+        const audioUrl = URL.createObjectURL(audioBlob);
+        
+        // 오디오 재생
+        currentAudio = new Audio(audioUrl);
+        
+        currentAudio.onplay = () => {
+            listenBtn.innerHTML = '<span class="speaker-icon">🔊</span><span>재생 중...</span>';
+        };
+        
+        currentAudio.onended = () => {
+            listenBtn.disabled = false;
+            listenBtn.innerHTML = '<span class="speaker-icon">🔊</span><span>발음 듣기</span>';
+            URL.revokeObjectURL(audioUrl);
+        };
+        
+        currentAudio.onerror = () => {
+            listenBtn.disabled = false;
+            listenBtn.innerHTML = '<span class="speaker-icon">🔊</span><span>발음 듣기</span>';
+            alert('오디오 재생에 실패했습니다.');
+        };
+        
+        await currentAudio.play();
+        
+    } catch (error) {
+        listenBtn.disabled = false;
+        listenBtn.innerHTML = '<span class="speaker-icon">🔊</span><span>발음 듣기</span>';
+        alert('오류가 발생했습니다: ' + error.message);
+        console.error('Error:', error);
+    }
 }
 
 // 페이지 로드 시

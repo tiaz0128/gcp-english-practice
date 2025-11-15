@@ -4,3 +4,4 @@ python-multipart==0.0.6
 pydantic==2.5.0
 google-cloud-aiplatform==1.75.0
 google-cloud-speech==2.21.0
+google-cloud-texttospeech==2.14.1

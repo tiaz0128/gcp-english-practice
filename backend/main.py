@@ -1,12 +1,15 @@
-from fastapi import FastAPI, HTTPException, UploadFile, File
+from fastapi import FastAPI, HTTPException, UploadFile, File, Form
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import Response
 from pydantic import BaseModel
 from typing import Optional
 from google.cloud import aiplatform
 from google.cloud import speech_v1p1beta1 as speech
+from google.cloud import texttospeech
 import os
 import tempfile
 import json
+import base64
 
 app = FastAPI(title="English Speaking Practice API")
 
@@ -26,6 +29,10 @@ LOCATION = os.getenv("GCP_LOCATION", "asia-northeast3")
 
 class SituationRequest(BaseModel):
     situation: str
+
+
+class TextToSpeechRequest(BaseModel):
+    text: str
 
 
 class SentenceResponse(BaseModel):
@@ -121,7 +128,7 @@ async def generate_sentence(request: SituationRequest):
 @app.post("/api/analyze-pronunciation", response_model=FeedbackResponse)
 async def analyze_pronunciation(
     audio: UploadFile = File(...),
-    original_sentence: str = None
+    original_sentence: str = Form(...)
 ):
     """
     사용자의 음성을 분석하고 피드백을 제공합니다.
@@ -215,6 +222,52 @@ def calculate_pronunciation_score(original: str, transcript: str, confidence: fl
     score = (word_match_ratio * 0.6 + confidence * 0.4) * 100
     
     return round(score, 2)
+
+
+@app.post("/api/text-to-speech")
+async def text_to_speech(request: TextToSpeechRequest):
+    """
+    텍스트를 음성으로 변환합니다 (Google Cloud Text-to-Speech)
+    """
+    try:
+        # Text-to-Speech 클라이언트 생성
+        client = texttospeech.TextToSpeechClient()
+        
+        # 입력 텍스트 설정
+        synthesis_input = texttospeech.SynthesisInput(text=request.text)
+        
+        # 음성 설정 (미국 영어, 여성 목소리)
+        voice = texttospeech.VoiceSelectionParams(
+            language_code="en-US",
+            name="en-US-Journey-F",  # 자연스러운 목소리
+            ssml_gender=texttospeech.SsmlVoiceGender.FEMALE
+        )
+        
+        # 오디오 설정
+        audio_config = texttospeech.AudioConfig(
+            audio_encoding=texttospeech.AudioEncoding.MP3,
+            speaking_rate=0.9,  # 약간 천천히
+            pitch=0.0
+        )
+        
+        # Text-to-Speech 요청
+        response = client.synthesize_speech(
+            input=synthesis_input,
+            voice=voice,
+            audio_config=audio_config
+        )
+        
+        # MP3 오디오 반환
+        return Response(
+            content=response.audio_content,
+            media_type="audio/mpeg",
+            headers={
+                "Content-Disposition": "inline; filename=speech.mp3"
+            }
+        )
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"음성 변환 실패: {str(e)}")
 
 
 @app.get("/health")
