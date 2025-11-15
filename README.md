@@ -27,22 +27,28 @@ Google Cloud Platform의 Cloud Run, Vertex AI, Speech-to-Text를 활용한 영�
 ## 기술 스택
 
 ### Backend
+
 - Python 3.11
 - FastAPI
 - Google Cloud Vertex AI
 - Google Cloud Speech-to-Text
+- Google Cloud Text-to-Speech
 - Docker
 
 ### Frontend
+
 - HTML5
 - CSS3
-- Vanilla JavaScript
+- JavaScript
 - Nginx
+- Docker
 
 ## 배포
+
+- Cloud Run
+- Cloud Build
+- Container Registry (GCR)
 
 ```bash
 $ ./deploy.sh
 ```
-
-
